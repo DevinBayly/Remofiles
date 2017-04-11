@@ -15,7 +15,8 @@
 #' @export
 #'
 #' @examples
-build_data <- function(basedata,ID,Dyad,obs,mod,Dist,time_name) {
+build_data <- function(file_name,ID,Dyad,obs,mod,Dist,time_name) {
+   basedat <- read.csv(file_name)
     ## naming of parameters has case selection to avoid prexisting variable
     ## names, appologies
     basedata  <- data.frame("ID" = basedata[[ID]],"Dyad" = basedata[[Dyad]],"obs" =basedata[[obs]],"time" = basedata[[time_name]],"mod" = basedata[[mod]],"Dist" = basedata[[Dist]])
