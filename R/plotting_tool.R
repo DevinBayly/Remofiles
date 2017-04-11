@@ -1,0 +1,23 @@
+## this function just houses a function that can be used to give a big overview plot of the observation overtime for each Dyad with the partners within.
+#' Title
+#'
+#' @param dat
+#'
+#' @return
+#' @export
+#'
+#' @import lattice
+#' @importFrom magrittr %>%
+#' @import dplyr
+#'
+#' @examples
+chec_data_trellis <- function (dat) {
+     dyadlabs  <- factor(dat$Dyad,levels = unique(dat$Dyad),labels <- unique(dat$Dyad))
+
+
+    dat %>%
+        group_by(Dyad) %>%
+        xyplot(obs~time|dyadlabs,data = .,groups=Dist,type="l",main=.$Dyad,layout = c(5,5))-> plot_to_return## i really still don't get it but adding the dyad there makes me see what i want
+    return (plot_to_return)
+
+}
