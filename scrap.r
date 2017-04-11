@@ -1,5 +1,5 @@
 ## these things are technically supposed to be taken care of
-basedat = read.csv("./../conv2secMods05.csv")# this is the importing step for the data
+basedat = read.csv("conv2secMods05.csv")# this is the importing step for the data
 ##I need to figure out if the previous code wasn't fully made generic
 
 test_names <- function (dat,name) {
