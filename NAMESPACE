@@ -2,6 +2,7 @@
 
 export(build_data)
 export(chec_data_trellis)
+export(process_data)
 export(runDerivativesEstimate)
 import(dplyr)
 import(lattice)

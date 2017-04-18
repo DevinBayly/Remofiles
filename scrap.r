@@ -7,6 +7,9 @@ test_names <- function (dat,name) {
 }
 
 trimmed_data  <- build_data(basedat,"Person","Couple","IBI","sexsat","female","timeCont")
+crossed_data <- process_data(trimmed_data)
+
+
 
 
 ## this is the space fortesting the centering, and residual, and mod column stuf,z
