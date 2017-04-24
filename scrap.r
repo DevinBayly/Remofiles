@@ -6,8 +6,14 @@ test_names <- function (dat,name) {
     return(dat[[ name ]][1:5])
 }
 
-trimmed_data  <- build_data(basedat,"Person","Couple","IBI","sexsat","female","timeCont")
+trimmed_data  <- build_data(basedat,"Person","Couple","IBI","sexsat","sexf","timeCont")
+## removing factor
+names(Filter(is.factor,trimmed_data))
+
+trimmed_data %>%
+  Filter(f == is.factor)
 crossed_data <- process_data(trimmed_data)
+View(head(crossed_data))
 
 
 
