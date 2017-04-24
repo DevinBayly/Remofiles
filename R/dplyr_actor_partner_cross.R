@@ -16,7 +16,6 @@ equalizeTimes <- function (dat,upperTimeBound) {
                           dat$Dist[tind],#dist
                           rep(NA,21))# following columns derivs and freqs based on obs
         } else if (t1 > tind) {## t1 got ahead, shouldn't have time repeats, but I guess that can be taken into account
-            print(tind)
             dat[seq(tind+1,nrow(dat)+1),]  <- dat[seq(tind,nrow(dat)),]
             ## this means that the rows must be in this order.
             dat[tind,]= c(dat$ID[tind],# id
