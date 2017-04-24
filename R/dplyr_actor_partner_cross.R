@@ -14,7 +14,8 @@ equalizeTimes <- function (dat,upperTimeBound) {
                           tind, #time
                           NA,#mod
                           dat$Dist[tind],#dist
-                          rep(NA,21))# following columns derivs and freqs based on obs
+                          rep(NA,21),
+                          dat$Dist_p[tind])# following columns derivs and freqs based on obs
         } else if (t1 > tind) {## t1 got ahead, shouldn't have time repeats, but I guess that can be taken into account
             dat[seq(tind+1,nrow(dat)+1),]  <- dat[seq(tind,nrow(dat)),]
             ## this means that the rows must be in this order.
@@ -24,7 +25,8 @@ equalizeTimes <- function (dat,upperTimeBound) {
                           tind, #time
                           NA,#mod
                           dat$Dist[tind],#dist
-                          rep(NA,21))# following columns derivs and freqs based on obs
+                          rep(NA,21),
+                          dat$Dist_p[tind])# following columns derivs and freqs based on obs
         }
         tind = tind +1
     }
