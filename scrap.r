@@ -1,21 +1,29 @@
 ## these things are technically supposed to be taken care of
-basedat = read.csv("conv2secMods05.csv")# this is the importing step for the data
 ##I need to figure out if the previous code wasn't fully made generic
 
 test_names <- function (dat,name) {
     return(dat[[ name ]][1:5])
 }
 
-trimmed_data  <- build_data(basedat,"Person","Couple","IBI","sexsat","sexf","timeCont")
 ## removing factor
-names(Filter(is.factor,trimmed_data))
+for (col in names(Filter(is.factor,trimmed_data))) {
+  trimmed_data[[col]] <- as.numeric(trimmed_data[[col]])
+  ## how to deal with cases where factor doesn't become 1s and 0s
+  if
+}
 
-trimmed_data %>%
-  Filter(f == is.factor)
+basedat = read.csv("conv2secMods05.csv")# this is the importing step for the data
+trimmed_data  <- build_data(basedat,"Person","Couple","IBI","sexsat","sexf","timeCont")
 crossed_data <- process_data(trimmed_data)
+run_co_fitting(crossed_data)
 View(head(crossed_data))
 
 
+#debugging commands
+
+basedata %>%
+  filter(ID == 501) %>%
+  mutate( dist0= as.numeric(Dist1))
 
 
 ## this is the space fortesting the centering, and residual, and mod column stuf,z
