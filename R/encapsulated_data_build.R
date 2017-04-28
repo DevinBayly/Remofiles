@@ -26,7 +26,7 @@ build_data <- function(basedata,ID,Dyad,obs,mod,Dist,time_name) {
     for (col in names(Filter(is.factor,basedata))) {
       basedata[[col]] <- as.numeric(basedata[[col]])
       #check to see if there is a number greater than 1 for either dist
-      if ((length(trimmed_data$Dist2) + length(trimmed_data$Dist1)) > 1) {
+      if ((length(trimmed_data$Dist2 >1) + length(trimmed_data$Dist1) > 1) > 0) {
         stop("Distinguisher Conversion from factor failed, please address in code")
       }
     }

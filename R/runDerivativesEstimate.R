@@ -71,7 +71,7 @@ runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
       control = lmeControl(opt = "optim"),
       na.action = na.exclude
     )
-  tLambda_self <- 2 * pi / sqrt(-treg_self$coefficients$fixed[1])
+  tLambda_self <- 2 * pi / sqrt(abs(treg_self$coefficients$fixed[1]))
   dat_param  <- dat_param %>%
       mutate(freq = tLambda_self)
   ## and now we have to rename the columns
