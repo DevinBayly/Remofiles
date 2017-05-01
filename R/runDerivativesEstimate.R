@@ -4,6 +4,7 @@ choose_tau_dim <- function (dat) {
     taus = c(1,2)
     dims = c(3,5,7)
 
+    cat("freq,R^2\n")
     for( tau in taus) {
         for (dm in dims) {
             dat  <- runDerivativesEstimate(1,dm,tau,dat)
@@ -71,14 +72,20 @@ runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
       control = lmeControl(opt = "optim"),
       na.action = na.exclude
     )
-  tLambda_self <- 2 * pi / sqrt(abs(treg_self$coefficients$fixed[1]))
-  dat_param  <- dat_param %>%
-      mutate(freq = tLambda_self)
+  if(treg_self$coefficients$fixed[1] > 0) {
+    tLambda_self <- NA
+  } else {
+    tLambda_self <- 2 * pi / sqrt(-(treg_self$coefficients$fixed[1]))
+  }
+  ## is this the right formula for the R^2?
+  ## the ind helps make sure that only non NA values get used in the var
+  ind <- !is.na(dat_param$d2_resids)
+  Rsq <- round(1 - (var(treg_self$residuals[,2]) / var(dat_param$d2_resids[ind])),4)
+  cat(tLambda_self,Rsq,"\n")
   ## and now we have to rename the columns
 
   ## it goes tau then dim ok??
   names(dat_param)[names(dat_param) == 'd_resids'] <- paste('d_resids_',theTau,'_',theEmbed,sep='')
   names(dat_param)[names(dat_param) == 'd2_resids'] <- paste('d2_resids_',theTau,'_',theEmbed,sep='')
-  names(dat_param)[names(dat_param) == 'freq'] <- paste('freq_',theTau,'_',theEmbed,sep='')
   return(dat_param)
 }
