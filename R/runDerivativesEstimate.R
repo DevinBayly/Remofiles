@@ -4,7 +4,7 @@ choose_tau_dim <- function (dat) {
     taus = c(1,2)
     dims = c(3,5,7)
 
-    cat("freq,R^2\n")
+    cat("freq,R^2,tau,dim\n")
     for( tau in taus) {
         for (dm in dims) {
             dat  <- runDerivativesEstimate(1,dm,tau,dat)
@@ -81,7 +81,7 @@ runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
   ## the ind helps make sure that only non NA values get used in the var
   ind <- !is.na(dat_param$d2_resids)
   Rsq <- round(1 - (var(treg_self$residuals[,2]) / var(dat_param$d2_resids[ind])),4)
-  cat(tLambda_self,Rsq,"\n")
+  cat(tLambda_self,Rsq,tau,dim,"\n")
   ## and now we have to rename the columns
 
   ## it goes tau then dim ok??
