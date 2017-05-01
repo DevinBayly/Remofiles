@@ -81,7 +81,7 @@ runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
   ## the ind helps make sure that only non NA values get used in the var
   ind <- !is.na(dat_param$d2_resids)
   Rsq <- round(1 - (var(treg_self$residuals[,2]) / var(dat_param$d2_resids[ind])),4)
-  cat(tLambda_self,Rsq,tau,dim,"\n")
+  cat(tLambda_self,Rsq,theTau,theEmbed,"\n")
   ## and now we have to rename the columns
 
   ## it goes tau then dim ok??
