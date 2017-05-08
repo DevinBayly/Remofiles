@@ -35,7 +35,7 @@ build_data <- function(basedata,ID,Dyad,obs,mod,Dist,time_name) {
     lower_ind <- basedata$Dist1 == lower_dist
     basedata$Dist1[higher_ind] <- 1
     basedata$Dist1[lower_ind] <- 0
-    basedata[["Dist2"]] <- (as.numeric(!basedata$Dist1))
+    basedata[["Dist0"]] <- (as.numeric(!basedata$Dist1))
     ## plot for people and pause for them to move on with the process
     print(chec_data_trellis(basedata))
     ## change original data to the changed df

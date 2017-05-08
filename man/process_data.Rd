@@ -4,7 +4,7 @@
 \alias{process_data}
 \title{Title}
 \usage{
-process_data(basedata)
+process_data(basedata, taus, dims)
 }
 \arguments{
 \item{basedata}{}

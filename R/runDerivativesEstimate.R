@@ -1,8 +1,16 @@
 
-choose_tau_dim <- function (dat) {
+#' Title
+#'
+#' @param dat
+#' @param taus
+#' @param dims
+#'
+#' @return
+#' @export
+#'
+#' @examples
+choose_tau_dim <- function (dat,taus,dims) {
 
-    taus = c(1,2)
-    dims = c(3,5,7)
 
     cat("freq,R^2,tau,dim\n")
     for( tau in taus) {
@@ -10,6 +18,7 @@ choose_tau_dim <- function (dat) {
             dat  <- runDerivativesEstimate(1,dm,tau,dat)
         }
     }
+  print("finished estimates")
     return(dat)
 }
 

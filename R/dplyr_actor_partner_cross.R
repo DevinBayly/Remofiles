@@ -1,7 +1,17 @@
 #### this is the basic what should be working set of tools. Problem being that the data isn't reliably structured...
 
 ### make these more like eventual dataframes
-equalizeTimes <- function (dat,upperTimeBound) {
+#' Title
+#'
+#' @param dat
+#' @param upperTimeBound
+#' @param fill_cols
+#'
+#' @return
+#' @export
+#'
+#' @examples
+equalizeTimes <- function (dat,upperTimeBound,fill_cols) {
     tind=1
     while (tind != upperTimeBound) {
         t1 = dat$time[tind]
@@ -14,8 +24,9 @@ equalizeTimes <- function (dat,upperTimeBound) {
                           tind, #time
                           NA,#mod
                           dat$Dist1[tind],#dist
-                          rep(NA,15),
-                          dat$Dist2[tind])# following columns derivs and freqs based on obs
+                          rep(NA,3),
+                          rep(NA,fill_cols),
+                          dat$Dist0[tind])# following columns derivs and freqs based on obs
         } else if (t1 > tind) {## t1 got ahead, shouldn't have time repeats, but I guess that can be taken into account
             dat[seq(tind+1,nrow(dat)+1),]  <- dat[seq(tind,nrow(dat)),]
             ## this means that the rows must be in this order.
@@ -25,8 +36,9 @@ equalizeTimes <- function (dat,upperTimeBound) {
                           tind, #time
                           NA,#mod
                           dat$Dist1[tind],#dist
-                          rep(NA,15),
-                          dat$Dist2[tind])# following columns derivs and freqs based on obs
+                          rep(NA,3),
+                          rep(NA,fill_cols),
+                          dat$Dist0[tind])# following columns derivs and freqs based on obs
         }
         tind = tind +1
     }
@@ -34,22 +46,40 @@ equalizeTimes <- function (dat,upperTimeBound) {
 }
 
 
-prepEqualize <- function (dat) {
+#' Title
+#'
+#' @param dat
+#' @param fill_cols
+#'
+#' @return
+#' @export
+#'
+#' @examples
+prepEqualize <- function (dat,fill_cols) {
     ids  <- unique(dat$ID)
     firstPerson  <- dat %>%
         filter(ID == ids[1])
     secondPerson  <- dat %>%
         filter(ID == ids[2])
     maxtime  <- max(firstPerson$time,secondPerson$time)
-    firstPersonupd  <- equalizeTimes(firstPerson,maxtime)
-    secondPersonupd  <- equalizeTimes(secondPerson,maxtime)
+    firstPersonupd  <- equalizeTimes(firstPerson,maxtime,fill_cols)
+    secondPersonupd  <- equalizeTimes(secondPerson,maxtime,fill_cols)
     return(rbind(firstPersonupd,secondPersonupd))
 }
 
-crossActorPartner <- function (dat) {
+#' Title
+#'
+#' @param dat
+#' @param fill_cols
+#'
+#' @return
+#' @export
+#'
+#' @examples
+crossActorPartner <- function (dat,fill_cols) {
     dat %>%
         group_by(Dyad) %>%
-        do(prepEqualize(.)) -> equalizeddat## this is actually the step in which we are making the columns equal
+        do(prepEqualize(.,fill_cols)) -> equalizeddat## this is actually the step in which we are making the columns equal
 
     ## now we go on to combine the columns into a new df
 

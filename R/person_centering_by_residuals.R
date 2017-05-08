@@ -16,8 +16,8 @@ addlevelMods  <- function (dat){
     ## im still leaning towards using a within ID sort of thing here
     modLevels = quantile(dat$mod,c(.25,.75))
     outdat  <- dat %>%
-        mutate(highModResid = mod-modLevels[2] ,
-               lowModResid = mod -modLevels[1])
+        mutate(highMod = mod-modLevels[2] ,
+               lowMod = mod -modLevels[1])
     return(outdat)
 
 }
