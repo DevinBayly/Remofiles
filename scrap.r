@@ -14,6 +14,32 @@ for (col in names(Filter(is.factor,trimmed_data))) {
 basedat = read.csv("conv2secMods05.csv")# this is the importing step for the data
 trimmed_data  <- build_data(basedat,"Person","Couple","IBI","sexsat","female","timeCont")
 crossed_data <- process_data(trimmed_data,c(1,2),c(5,6,7))
+
+
+## practice setting strings as formulas
+library(nlme)
+tau <- 1
+dim <- 5
+d2 <- paste("d2_resids",tau,dim,sep = "_")
+d <- paste("d_resids",tau,dim,sep = "_")
+dp <- paste("d_resids",tau,dim,"p",sep = "_")
+fitstring <-paste(d2,
+             paste("Dist1:resids + Dist0:resids + Dist1:",d," + Dist0:",d," + Dist1:resids_p +Dist0:resids_p + Dist1:",dp, " + Dist0:",dp," - 1",sep = "")
+             ,sep = " ~ ")
+fit_fmla <- as.formula(fitstring)
+randstring <- paste(" ~ resids + ",d," + resids_p + ",dp, " - 1 | Dyad",sep = "")
+rand_fmla <- as.formula(randstring)
+
+fit <- lme(fit_fmla,random=list(rand_fmla), data=crossed_data, method="ML",na.action=na.omit,control=lmeControl(opt="optim"))
+summary(fit)
+
+
+
+####
+
+
+
+
 basic_co(crossed_data,1,1)
 partnered_co(crossed_data,1,1)
 moderator_co(crossed_data,1,1)

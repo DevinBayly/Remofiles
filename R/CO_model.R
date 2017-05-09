@@ -12,15 +12,17 @@ base_co <- function(data,tau,dim) {
   ## for the moment, the tau dim selection will be hard coded, but to be changed
   ## trim the data each time
   data <- data[complete.cases(data),]
-  d2 <- paste("d2_resids_",tau,"_",dim,sep='')
-  d <- paste("d_resids_",tau,"_",dim,sep='')
-  dp <- paste("d_resids_",tau,"_",dim,"_p",sep='')
-  formula1 <-paste(d2," ~ Dist1:resids + Dist2:resids + Dist1:",d," + Dist2:",d," + Dist1:resids_p + Dist2:resids_p + Dist1:",dp," + Dist2:",dp," - 1",sep= "")
-  print(formula1)
-  formula2 <- paste(" ~ resids + ",d," + resids_p +", dp,"  - 1 | Dyad",sep="")
-  print(formula2)
+  d2 <- paste("d2_resids",tau,dim,sep = "_")
+  d <- paste("d_resids",tau,dim,sep = "_")
+  dp <- paste("d_resids",tau,dim,"p",sep = "_")
+  fitstring <-paste(d2,
+                    paste("Dist1:resids + Dist0:resids + Dist1:",d," + Dist0:",d," + Dist1:resids_p +Dist0:resids_p + Dist1:",dp, " + Dist0:",dp," - 1",sep = "")
+                    ,sep = " ~ ")
+  fit_fmla <- as.formula(fitstring)
+  randstring <- paste(" ~ resids + ",d," + resids_p + ",dp, " - 1 | Dyad",sep = "")
+  rand_fmla <- as.formula(randstring)
 
-  fit <- lme(formula1,random=list(formula2), data=data, method="ML",na.action=na.omit,control=lmeControl(opt="optim"))
+  fit <- lme(fit_fmla,random=list(rand_fmla), data=crossed_data, method="ML",na.action=na.omit,control=lmeControl(opt="optim"))
   summary(fit)
   return(fit)
 }
