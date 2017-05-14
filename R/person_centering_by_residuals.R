@@ -7,9 +7,11 @@ getrsdls <- function (dat) {
     # rename observable to be the observable for clarification
     # example being getrsdls ("IBI","time",dat)
 
-    f  <- paste("obs","~","time")# makes it possible to havestring formula
-    fit  <- lm(f,data=dat)
-    return(summary(fit)$residuals)
+    dat_mean <- mean(dat$obs)
+    return(dat$obs -dat_mean)
+    # f  <- paste("obs","~","time")# makes it possible to havestring formula
+    # fit  <- lm(f,data=dat)
+    # return(summary(fit)$residuals)
 }
 
 addlevelMods  <- function (dat){
