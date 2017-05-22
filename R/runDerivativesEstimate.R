@@ -56,7 +56,7 @@ choose_tau_dim <- function (dat,taus,dims) {
 #' @examples
 runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
 
-  print(dat_param$ID[1])
+  # print(dat_param$ID[1])
 
     obsMatrix <- gllaEmbed(dat_param$resids, embed = theEmbed, tau = theTau)
 
@@ -69,18 +69,21 @@ runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
         deltaT = deltaTime,
         order = 2
       )
-    obsMatrixLLA <- obsMatrix[, 2:dim(obsMatrix)[2]] %*% wMatrix
-    return(as.data.frame(obsMatrixLLA))
+    obsMatrixLLA.df <- as.data.frame(obsMatrix[, 2:dim(obsMatrix)[2]] %*% wMatrix)
+    obsMatrixLLA.df$ID <- dat_param$ID[1]
+    colnames(obsMatrixLLA.df) <- c("resids","d_resids","d2_resids","ID")
+    # return(as.data.frame(obsMatrixLLA))
 
   # library(nlme)
-  # treg_self <-
-  #   lme(
-  #     d2_resids ~ resids + d_resids  - 1,
-  #     random = list(~resids + d_resids - 1 | ID),
-  #     data = dat_param,
-  #     control = lmeControl(opt = "optim"),
-  #     na.action = na.exclude
-  #   )
+  treg_self <-
+    lme(
+      d2_resids ~ resids + d_resids  - 1,
+      random = list(~resids + d_resids - 1 | ID),
+      data = obsMatrixLLA.df,
+      control = lmeControl(opt = "optim"),
+      na.action = na.exclude
+    )
+  # print(summary(treg_self))
   # if(treg_self$coefficients$fixed[1] > 0) {
   #   tLambda_self <- NA
   # } else {
@@ -95,4 +98,5 @@ runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
   #
   # ## it goes tau then dim ok??
   # return(dat_param)
+     return(obsMatrixLLA.df)
 }
