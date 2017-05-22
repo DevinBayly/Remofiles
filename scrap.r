@@ -25,7 +25,16 @@ residualized <- makeResidCol(trimmed_data)
 droped_residualized <- makeResidCol(drop_shorties)
 droped_residualized %>%
   group_by(ID) %>%
-  do(choose_tau_dim(.,c(1,2),c(5,6)))
+  do(choose_tau_dim(.,c(1,2),c(5,6))) -> est_res
+
+## source the derivatives estimate
+source("../findingbug/derivatives_dial.R")
+## and now subtract to check similarity or plot?
+plot(est_res$resids_2_5 - derivatives_dial$dial,type = "l")
+plot(est_res$resids_2_5 ,type = "l")
+
+
+
 
 colnames(residualized)
 
