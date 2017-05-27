@@ -12,7 +12,8 @@
 #' @examples
 choose_tau_dim <- function (dat,taus,dims) {
   ## fastest way to do this is to preallocate the amount of space that we need, I think we can count on the fact that there will always be less estimated rows than the
-  ret_df <- data.frame(matrix(0,ncol=length(taus)*length(dims)*3,nrow=length(dat$obs)))
+  ret_df <- data.frame(matrix(0,ncol=length(taus)*length(dims)*3+1,nrow=length(dat$obs)))
+  ## we have to add the 1 because id column needs to have somewhere to go
   ret_df_names <- c()
   ## and then we can just fill in after
     # cat("freq,R^2,tau,dim\n")
@@ -26,7 +27,7 @@ choose_tau_dim <- function (dat,taus,dims) {
       ## ind.est.data will have several columns, each same len, now place in the matrix
       size <- length(ind.est.data[,1])
       ret_df[row_pos:(row_pos+size-1),
-             col_pos:(col_pos+2)] <- ind.est.data
+             col_pos:(col_pos+3)] <- ind.est.data[row_pos:(row_pos+size-1),]
       ret_df_names <- c(ret_df_names,
                         paste("resids",tau,dm,sep="_"),
                         paste("d_resids",tau,dm,sep = "_"),
