@@ -9,12 +9,11 @@
 #'
 #' @examples
 process_by_group <- function(dat,taus,dims) {
-  res.list <- list()
   ids <- unique(dat$ID)
-  res.list <- c(sapply(
+  res.list <- lapply(
     ids,
     function(x) {choose_tau_dim(dat[dat$ID == x,],taus,dims)}
-  ))
+  )
   ##must go over the combinations of the tau and dim here
   ## return the list of results
   res.list
@@ -37,10 +36,11 @@ choose_tau_dim <- function (dat,taus,dims) {
     for (dm in dims) {
       res.df <- runDerivativesEstimate(1,dm,tau,dat)
       ## add the columns with the right name to the return list
-      person.tau.dim.est <- sapply(colnames(res.df),function (x){
-        name <- paste(x,tau,dm,sep=".")
-        person.tau.dim.est <- c(person.tau.dim.est,name = res.df[[x]]
-                                )})
+      names <- sapply(colnames(res.df),function (x) {
+        paste(x,tau,dm,sep=".")
+      })
+      colnames(res.df) <- names
+      person.tau.dim.est <- c(person.tau.dim.est,list(res.df))
     }
   }
   person.tau.dim.est
@@ -78,16 +78,5 @@ runDerivativesEstimate = function (deltaTime,theEmbed,theTau,dat_param) {
     obsMatrixLLA.df <- as.data.frame(obsMatrix[, 2:dim(obsMatrix)[2]] %*% wMatrix)
     obsMatrixLLA.df$ID <- dat_param$ID[1]
     colnames(obsMatrixLLA.df) <- c("resids","d_resids","d2_resids","ID")
-    # return(as.data.frame(obsMatrixLLA))
-  # treg_self <-
-  #   lm(
-  #     d2_resids ~ resids + d_resids  - 1,
-  #     data = ret_df,
-  #     na.action = na.exclude
-  #   )
-  # smry_treg <- summary(treg_self)
-  # print(smry_treg$r.squared)
-
-  # library(nlme)
     return(obsMatrixLLA.df)
 }
