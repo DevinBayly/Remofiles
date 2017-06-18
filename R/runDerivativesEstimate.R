@@ -8,17 +8,24 @@
 #' @export
 #'
 #' @examples
-process_by_group <- function(dat,taus,dims) {
+process_by_group <- function(dat,taus,dims,extra_info=F) {
   person.tau.dim.est <- list()
   for( tau in taus) {
     for (dm in dims) {
       ids <- unique(dat$ID)
-      res.list <- lapply(
+      mixed.output <- lapply(
         ids,
-        function(x) {runDerivativesEstimate(1,tau,dm,dat[dat$ID == x,])}
+        function(x) {runDerivativesEstimate(1,tau,dm,dat[dat$ID == x,],extra_info)}
       )
+      ##create the res.list from the first elements in the nested list
+      res.list <- lapply(mixed.output,`[[`,1) ## TODO look up what this backtick is doing
       res.df <- as.data.frame(do.call("rbind",res.list))
-      # add the columns with the right name to the return list
+      if(extra_info) {
+        ##establish a global variable with the outputs
+        r.sqrd <- unlist(lapply(mixed.output,`[[`,2))
+        assign(paste("r.sqrd",tau,dm,sep="."),r.sqrd,envir = .GlobalEnv)
+      }
+      # add the columns with the right nßame to the return list
       names <- sapply(colnames(res.df),function (x) {
         paste(x,tau,dm,sep=".")
       })
@@ -26,7 +33,7 @@ process_by_group <- function(dat,taus,dims) {
       person.tau.dim.est <- c(person.tau.dim.est,list(res.df))
     }
   }
-  person.tau.dim.est
+  return(person.tau.dim.est)
 }
 
 
@@ -43,7 +50,7 @@ process_by_group <- function(dat,taus,dims) {
 #' @export
 #'
 #' @examples
-runDerivativesEstimate = function (deltaTime,theTau,theEmbed,dat_param) {
+runDerivativesEstimate = function (deltaTime,theTau,theEmbed,dat_param,est_info=F) {
 
   # print(dat_param$ID[1])
 
@@ -61,5 +68,19 @@ runDerivativesEstimate = function (deltaTime,theTau,theEmbed,dat_param) {
     obsMatrixLLA.df <- as.data.frame(obsMatrix[, 2:dim(obsMatrix)[2]] %*% wMatrix)
     obsMatrixLLA.df$ID <- dat_param$ID[1]
     colnames(obsMatrixLLA.df) <- c("resids","d_resids","d2_resids","ID")
-    return(obsMatrixLLA.df)
+    res.list <- list(obsMatrixLLA.df)
+    ## optional information from estimate
+    if (est_info == T) {
+
+      treg_self <-
+        lm(
+            d2_resids ~ resids + d_resids  - 1,
+            data = obsMatrixLLA.df,
+            na.action = na.exclude
+          )
+        smmry.treg <- summary(treg_self)
+
+        res.list <- c(res.list,smmry.treg$r.squared)
+    }
+    return(res.list)
 }
