@@ -25,6 +25,8 @@ process_by_group <- function(dat,taus,dims,extra_info=F) {
         r.sqrd <- unlist(lapply(mixed.output,`[[`,2))
         assign(paste("r.sqrd",tau,dm,sep="."),r.sqrd,envir = .GlobalEnv)
       }
+      #cross the data
+      res.df <- crossPartners(res.df)
       # add the columns with the right nßame to the return list
       names <- sapply(colnames(res.df),function (x) {
         paste(x,tau,dm,sep=".")
@@ -67,7 +69,8 @@ runDerivativesEstimate = function (deltaTime,theTau,theEmbed,dat_param,est_info=
       )
     obsMatrixLLA.df <- as.data.frame(obsMatrix[, 2:dim(obsMatrix)[2]] %*% wMatrix)
     obsMatrixLLA.df$ID <- dat_param$ID[1]
-    colnames(obsMatrixLLA.df) <- c("resids","d_resids","d2_resids","ID")
+    obsMatrixLLA.df$Dyad <- dat_param$Dyad[1]
+    colnames(obsMatrixLLA.df) <- c("resids","d_resids","d2_resids","ID","Dyad")
     res.list <- list(obsMatrixLLA.df)
     ## optional information from estimate
     if (est_info == T) {

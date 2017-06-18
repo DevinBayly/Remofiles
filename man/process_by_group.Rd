@@ -4,7 +4,7 @@
 \alias{process_by_group}
 \title{Title}
 \usage{
-process_by_group(dat, taus, dims)
+process_by_group(dat, taus, dims, extra_info = F)
 }
 \arguments{
 \item{dims}{}

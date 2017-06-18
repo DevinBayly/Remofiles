@@ -2,7 +2,6 @@
 ##I need to figure out if the previous code wasn't fully made generic
 
 library(dplyr)
-source("R/GLLAfunctions.R")
 
 
 basedat_physio <- read.csv("../findingbug/physio2.csv")
@@ -10,7 +9,6 @@ basedat_physio <- read.csv("../findingbug/physio2.csv")
 
 trimmed_data  <- build_data(basedat_physio,"id","dyad","dial","diastolic","sexm","time")
 
-process_data(trimmed_data,c(2),c(5))
 
 drop_shorties <- trimmed_data %>%
   group_by(ID) %>%
@@ -18,6 +16,19 @@ drop_shorties <- trimmed_data %>%
 
 list.res <- process_data(drop_shorties,c(2),c(5))
 
+##one for flip prac
+
+prac.dat <- list.res[[1]]
+prac.dat
+dyadd <- ""
+prac.dat %>%
+  group_by(eval("Dyad.2.5")) %>%
+  arrange(Dyad.2.5,desc(ID.2.5)) -> flipped
+colnames(flipped) <- paste(colnames(flipped),"p",sep="_")
+together <- data.frame(prac.dat,flipped)
+
+
+#use unique and subtract the id and dyad to see if we are ever off , should only get back 0 and 500
 
 ##experimenting with the creating of the strings to make the column headers need tehh assign function to make this easier
 taus <- c(1,2,3)

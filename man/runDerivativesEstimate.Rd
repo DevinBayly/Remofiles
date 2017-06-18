@@ -4,7 +4,7 @@
 \alias{runDerivativesEstimate}
 \title{runDerivativesEstimate}
 \usage{
-runDerivativesEstimate(deltaTime, theEmbed, theTau, dat_param)
+runDerivativesEstimate(deltaTime, theTau, theEmbed, dat_param, est_info = F)
 }
 \arguments{
 \item{dat_param}{}
