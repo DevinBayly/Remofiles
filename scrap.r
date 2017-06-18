@@ -9,10 +9,15 @@ basedat_physio <- read.csv("../findingbug/physio2.csv")
 # basedat = read.csv("conv2secMods05.csv")# this is the importing step for the data
 
 trimmed_data  <- build_data(basedat_physio,"id","dyad","dial","diastolic","sexm","time")
-choose_tau_dim(trimmed_data,c(1),c(2))
+
+process_data(trimmed_data,c(2),c(5))
+
 drop_shorties <- trimmed_data %>%
   group_by(ID) %>%
   filter(length(ID)>15)
+
+list.res <- process_data(drop_shorties,c(2),c(5))
+
 
 ##experimenting with the creating of the strings to make the column headers need tehh assign function to make this easier
 taus <- c(1,2,3)
@@ -64,3 +69,26 @@ plot(derivatives_dial[1:24,4] - pid_two_est[1:24,3])
 
 ## trying to switch the estimate process to person by person, seems to be a big difference between current method and the previous version
 
+try.list <- list()
+
+(function (x) {x <- c(x,5)})(try.list)
+try.list
+
+trimmed_data[trimmed_data$ID == 1,]
+
+names <- c("resid","dresid","d2resids")
+
+    sapply(names, function (x) {
+      print(paste(x,tau,dm,sep="."))
+    })
+
+sapply(colnames(trimmed_data),function( x) {
+  print(paste(x,"oneline?"))
+})
+
+length(unique(drop_shorties))
+
+sapply(unique(drop_shorties$ID),function (x) {x})
+
+
+trimmed.list <- list(trimmed_data)
