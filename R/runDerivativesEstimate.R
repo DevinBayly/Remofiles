@@ -15,7 +15,9 @@ process_by_group <- function(dat,taus,dims,extra_info=F) {
       ids <- unique(dat$ID)
       mixed.output <- lapply(
         ids,
-        function(x) {runDerivativesEstimate(1,tau,dm,dat[dat$ID == x,],extra_info)}
+        function(x) {
+          individual.dat <- subset(dat,dat$ID == x)
+          runDerivativesEstimate(1,tau,dm,individual.dat,extra_info)}
       )
       ##create the res.list from the first elements in the nested list
       res.list <- lapply(mixed.output,`[[`,1) ## TODO look up what this backtick is doing

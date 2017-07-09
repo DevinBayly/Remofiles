@@ -11,38 +11,30 @@
 #' @export
 #'
 #' @examples
-equalizeTimes <- function (dat,upperTimeBound,fill_cols) {
-    tind=1
-    while (tind != upperTimeBound) {
-        t1 = dat$time[tind]
-        if(is.na(t1)) {## at this point the df doesn't have numbers given, so we just supply supplemental rows until the end
-            dat[seq(tind+1,nrow(dat)+1),]  <- dat[seq(tind,nrow(dat)),]
- ## this is the NA row creation step
-            dat[tind,]= c(dat$ID[tind],# id
-                          dat$Dyad[tind],#dyad
-                          NA,#obs
-                          tind, #time
-                          NA,#mod
-                          dat$Dist1[tind],#dist
-                          rep(NA,3),
-                          rep(NA,fill_cols),
-                          dat$Dist0[tind])# following columns derivs and freqs based on obs
-        } else if (t1 > tind) {## t1 got ahead, shouldn't have time repeats, but I guess that can be taken into account
-            dat[seq(tind+1,nrow(dat)+1),]  <- dat[seq(tind,nrow(dat)),]
-            ## this means that the rows must be in this order.
-            dat[tind,]= c(dat$ID[tind],# id
-                          dat$Dyad[tind],#dyad
-                          NA,#obs
-                          tind, #time
-                          NA,#mod
-                          dat$Dist1[tind],#dist
-                          rep(NA,3),
-                          rep(NA,fill_cols),
-                          dat$Dist0[tind])# following columns derivs and freqs based on obs
-        }
-        tind = tind +1
+equalizeTimes <- function (dat,upper.time) {
+  time <-1
+  i <- 1
+  t.buffered.obs<-list(obs=c(),time=c(),resids=c())
+  while(time <= upper.time){
+    if (time < dat$time[i] || is.na(dat$time[i])) {
+      t.buffered.obs$obs = c(t.buffered.obs$obs,NA)
+      t.buffered.obs$resids = c(t.buffered.obs$resids,NA)
     }
-    return(dat)
+    else if (time == dat$time[i]) {
+      t.buffered.obs$obs=c(t.buffered.obs$obs, dat$obs[i])
+      t.buffered.obs$resids=c(t.buffered.obs$resids, dat$resids[i])
+      i = i + 1
+    }
+    time =time+1
+  }
+  t.buffered.obs$time = c(1:upper.time)
+  res.df <- data.frame(t.buffered.obs)
+  ##fill out constant columns
+  res.df$ID = dat$ID[1]
+  res.df$mod = dat$mod[1]
+  res.df$Dist1 = dat$Dist1[1]
+  res.df$Dist0 = dat$Dist0[1]
+  return(res.df)
 }
 
 
@@ -55,16 +47,24 @@ equalizeTimes <- function (dat,upperTimeBound,fill_cols) {
 #' @export
 #'
 #' @examples
-prepEqualize <- function (dat,fill_cols) {
-    ids  <- unique(dat$ID)
-    firstPerson  <- dat %>%
-        filter(ID == ids[1])
-    secondPerson  <- dat %>%
-        filter(ID == ids[2])
+prepEqualize <- function (dat) {
+    ids <- unique(dat$ID)
+    firstPerson <- dat %>%
+      filter(ID ==ids[1])
+    secondPerson <- dat %>%
+      filter(ID == ids[2])
     maxtime  <- max(firstPerson$time,secondPerson$time)
-    firstPersonupd  <- equalizeTimes(firstPerson,maxtime,fill_cols)
-    secondPersonupd  <- equalizeTimes(secondPerson,maxtime,fill_cols)
-    return(rbind(firstPersonupd,secondPersonupd))
+    if(is.na(firstPerson$ID[1])){
+      firstPerson.df <- data.frame() ## make empty dataframe
+    } else {
+    firstPerson.df <- equalizeTimes(firstPerson,maxtime)
+    }
+    if(is.na(secondPerson$ID[1])){
+      secondPerson.df <- data.frame() ## make empty dataframe
+    } else {
+    secondPerson.df <- equalizeTimes(secondPerson,maxtime)
+    }
+    return(rbind(firstPerson.df,secondPerson.df))
 }
 
 #' Title
@@ -76,25 +76,30 @@ prepEqualize <- function (dat,fill_cols) {
 #' @export
 #'
 #' @examples
-crossActorPartner <- function (dat,fill_cols) {
+crossActorPartner <- function (dat) {
     dat %>%
         group_by(Dyad) %>%
-        do(prepEqualize(.,fill_cols)) -> equalizeddat## this is actually the step in which we are making the columns equal
-
+        do(prepEqualize(.)) -> all.equalized.partners
     ## now we go on to combine the columns into a new df
-
-    equalizeddat %>%
-        group_by(Dyad) %>%
-        arrange(Dyad,ID) -> selfdat ## basically organizes first by Dyad, and then ascending person (this is assuming that the data has partners organized with
-    selfdf  <- as.data.frame(selfdat)
-    equalizeddat %>%
-        group_by(Dyad) %>%
-        arrange(Dyad,desc(ID)) -> partnerdat
-    partnerdf  <- as.data.frame(partnerdat)
-    ## changes column names of partnerdf to have the p next to them
-    colnames(partnerdf)  <- paste(colnames(partnerdf),"p",sep="_")
-
-    crossdat  <- data.frame(selfdf,partnerdf)## seems pretty fast, I think I'll keep it
-    return(crossdat)
+    return(all.equalized.partners)
 }
 ### this is the dataframe column selections
+#' Title
+#'
+#' @param data
+#'
+#' @return
+#' @export
+#'
+#' @examples
+crossPartners <- function (data) {
+  ##create copy flipped
+  data %>%
+    group_by(Dyad) %>%
+    arrange(Dyad,desc(ID)) -> partner.data
+  ##rename
+  colnames(partner.data) <- paste(colnames(partner.data),"p",sep="_")
+  ##mush back together
+  res.df <- data.frame(data,partner.data)
+  return (res.df)
+}

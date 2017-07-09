@@ -15,6 +15,7 @@ chec_data_trellis <- function (dat) {
      dyadlabs  <- factor(dat$Dyad,levels = unique(dat$Dyad),labels <- unique(dat$Dyad))
 
 
+
     dat %>%
         group_by(Dyad) %>%
         xyplot(obs~time|dyadlabs,data = .,groups=Dist1,type="l",main=.$Dyad,layout = c(5,5))-> plot_to_return## i really still don't get it but adding the dyad there makes me see what i want
