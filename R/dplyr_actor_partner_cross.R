@@ -32,6 +32,8 @@ equalizeTimes <- function (dat,upper.time) {
   ##fill out constant columns
   res.df$ID = dat$ID[1]
   res.df$mod = dat$mod[1]
+  res.df$highMod = dat$highMod[1]
+  res.df$lowMod = dat$lowMod[1]
   res.df$Dist1 = dat$Dist1[1]
   res.df$Dist0 = dat$Dist0[1]
   return(res.df)
