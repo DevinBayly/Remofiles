@@ -72,7 +72,12 @@ runDerivativesEstimate = function (deltaTime,theTau,theEmbed,dat_param,est_info=
     obsMatrixLLA.df <- as.data.frame(obsMatrix[, 2:dim(obsMatrix)[2]] %*% wMatrix)
     obsMatrixLLA.df$ID <- dat_param$ID[1]
     obsMatrixLLA.df$Dyad <- dat_param$Dyad[1]
-    colnames(obsMatrixLLA.df) <- c("resids","d_resids","d2_resids","ID","Dyad")
+    obsMatrixLLA.df$mod <- dat_param$mod[1]
+    obsMatrixLLA.df$Dist0 <- dat_param$Dist0[1]
+    obsMatrixLLA.df$Dist1 <- dat_param$Dist1[1]
+    obsMatrixLLA.df$highMod <- dat_param$highMod[1]
+    obsMatrixLLA.df$lowMod <- dat_param$lowMod[1]
+    colnames(obsMatrixLLA.df) <- c("resids","d_resids","d2_resids","ID","Dyad","mod","Dist0","Dist1","highMod","lowMod")
     res.list <- list(obsMatrixLLA.df)
     ## optional information from estimate
     if (est_info == T) {
