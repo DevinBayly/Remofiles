@@ -10,5 +10,5 @@ runDerivativesEstimate(deltaTime, theTau, theEmbed, dat_param, est_info = F)
 \item{dat_param}{}
 }
 \description{
-runDerivativesEstimate
+Uses the Stephen Boker GLLA code to calculate 1st and 2nd derivatives for the person data that has been passed in at the moment.
 }

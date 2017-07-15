@@ -1,5 +1,10 @@
 ## this function just houses a function that can be used to give a big overview plot of the observation overtime for each Dyad with the partners within.
-#' Title
+#' chec_data_trellis
+#'
+#' This function is used to help visualize whether the data coming into the build_data function is poorly edited. The package doesn't have extensive checking steps in order to keep it is general as possible to the varieties of Dyadic Timeseries data that may exist.
+#'
+#' The idea is to use check the plots and return to the raw csv to edit out what is necessary.
+#'
 #'
 #' @param dat
 #'

@@ -1,5 +1,9 @@
 #' build_data
 #'
+#' This function takes a raw csv file and formats it in a generic fashion so that the processing and fitting steps are able to operate over it.
+#'
+#' Refer to the vignette for questions about how data should look before going into build_data
+#'
 #' @param basedata
 #' @param ID
 #' @param Dyad
@@ -11,10 +15,11 @@
 #' @importFrom magrittr %>%
 #' @import dplyr
 #'
-#' @return
+#' @return this returns a dataframe that has "id","dyad","dial","diastolic","sexm","time" as column names. There are additional Dist1 and Dist0 that help to add or drop information in the fitting steps much later.
 #' @export
 #'
 #' @examples
+#' trimmed_data  <- build_data(basedat_physio,"id","dyad","dial","diastolic","sexm","time")
 build_data <- function(basedata,ID,Dyad,obs,mod,Dist,time_name) {
     ## naming of parameters has case selection to avoid prexisting variable
     ## names, appologies

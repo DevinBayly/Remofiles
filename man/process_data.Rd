@@ -2,13 +2,34 @@
 % Please edit documentation in R/main_flow.R
 \name{process_data}
 \alias{process_data}
-\title{Title}
+\title{process_data}
 \usage{
 process_data(basedata, taus, dims, extra_info = F)
 }
 \arguments{
-\item{basedata}{}
+\item{extra_info}{}
+}
+\value{
+dataframe with 1st, 2nd derivatives, residual column, high/low Moderator, ID, Dyad, time columns
 }
 \description{
-Title
+this function handles the critical step of taking the data post build,
+and processes it to a form that can be run through the actual coupled
+oscillator functions. Takes tau and dim argument for derivative estimation step
+}
+\details{
+extra-info populates a global environment variable with the R^2 values for the derivative estimates, to assist in determining whether these estimates are of any use
+
+includes
+  creation of residual column --
+  equalization of each partners data length--
+  actual locallinear approximation (using Steven Boker's GLLA code --see references) for 1st and second derivatives --
+  crossing of the actor and partner --
+}
+\examples{
+
+#tau 1 dim 6 extra info T
+process_data(build.cleaned.data,c(1),c(6),T)
+#tau 2,3 dim 5,6,7 extra info F
+process_data(build.cleaned.data,c(2,3),c(5,6,7),F)
 }

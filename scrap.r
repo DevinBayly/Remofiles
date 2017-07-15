@@ -26,9 +26,14 @@ toss.non.dyads <- drop_shorties %>%
   group_by(Dyad) %>%
   do(no.dyad.check(.))
 
-list.res <- process_data(toss.non.dyads,c(2),c(5))
-check.data <- list.res[[1]]
-View(check.data)
-
-
+taus <- c(2,3,4)
+dms <- c(5,6,7)
+for (tau in taus) {
+  for (dm in dms) {
+    list.res <- process_data(toss.non.dyads,tau,dm)
+    check.data <- list.res[[1]]
+    fit <- base_co(check.data,tau,dm)
+    capture.output(summary(fit),file = paste("../fit_summary",tau,dm,"txt",sep = "_"))
+  }
+}
 ## looking for missing dyads

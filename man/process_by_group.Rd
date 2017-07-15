@@ -2,7 +2,7 @@
 % Please edit documentation in R/runDerivativesEstimate.R
 \name{process_by_group}
 \alias{process_by_group}
-\title{Title}
+\title{process_by_group}
 \usage{
 process_by_group(dat, taus, dims, extra_info = F)
 }
@@ -10,5 +10,12 @@ process_by_group(dat, taus, dims, extra_info = F)
 \item{dims}{}
 }
 \description{
-Title
+Essentially the main function for processing  all of our data. Calculates derivative estimates for each person in data, and then 
+makes the flipped version of the data, and sets the correct column names.
+}
+\examples{
+process_by_group(equalized.dat,c(1),c(5,6),T)
+process_by_group(equalized.dat,c(3),c(4,6))
+
+
 }

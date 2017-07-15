@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting_tool.R
 \name{chec_data_trellis}
 \alias{chec_data_trellis}
-\title{Title}
+\title{chec_data_trellis}
 \usage{
 chec_data_trellis(dat)
 }
@@ -10,5 +10,8 @@ chec_data_trellis(dat)
 \item{dat}{}
 }
 \description{
-Title
+This function is used to help visualize whether the data coming into the build_data function is poorly edited. The package doesn't have extensive checking steps in order to keep it is general as possible to the varieties of Dyadic Timeseries data that may exist.
+}
+\details{
+The idea is to use check the plots and return to the raw csv to edit out what is necessary.
 }

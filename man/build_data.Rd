@@ -9,6 +9,15 @@ build_data(basedata, ID, Dyad, obs, mod, Dist, time_name)
 \arguments{
 \item{time_name}{}
 }
+\value{
+this returns a dataframe that has "id","dyad","dial","diastolic","sexm","time" as column names. There are additional Dist1 and Dist0 that help to add or drop information in the fitting steps much later.
+}
 \description{
-build_data
+This function takes a raw csv file and formats it in a generic fashion so that the processing and fitting steps are able to operate over it.
+}
+\details{
+Refer to the vignette for questions about how data should look before going into build_data
+}
+\examples{
+trimmed_data  <- build_data(basedat_physio,"id","dyad","dial","diastolic","sexm","time")
 }

@@ -1,4 +1,9 @@
-#' Title
+#' process_by_group
+#'
+#' Essentially the main function for processing  all of our data. Calculates derivative estimates for each person in data, and then 
+#' makes the flipped version of the data, and sets the correct column names.
+#'
+#'
 #'
 #' @param dat
 #' @param taus
@@ -8,6 +13,11 @@
 #' @export
 #'
 #' @examples
+#' process_by_group(equalized.dat,c(1),c(5,6),T)
+#' process_by_group(equalized.dat,c(3),c(4,6))
+#'
+#'
+
 process_by_group <- function(dat,taus,dims,extra_info=F) {
   person.tau.dim.est <- list()
   for( tau in taus) {
@@ -42,6 +52,10 @@ process_by_group <- function(dat,taus,dims,extra_info=F) {
 
 
 #' runDerivativesEstimate
+#'
+#' Uses the Stephen Boker GLLA code to calculate 1st and 2nd derivatives for the person data that has been passed in at the moment. 
+#'
+#'
 #'
 #' @param deltaTime
 #' @param theEmbed

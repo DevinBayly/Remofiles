@@ -1,16 +1,18 @@
-#### this is the basic what should be working set of tools. Problem being that the data isn't reliably structured...
 
-### make these more like eventual dataframes
-#' Title
+#' equalize times
 #'
+#' this function makes missing values for observations at a particular time step
+#'  become NA. This makes it possible for equal length data in the ensuing steps of the coupled osc.
+#'  Additional important columns are filled in also.
+#'
+#' @param upper.time
 #' @param dat
-#' @param upperTimeBound
-#' @param fill_cols
 #'
-#' @return
+#' @return a dataframe of correct length for the dyad
 #' @export
 #'
 #' @examples
+#' equalizeTimes(personal.df,max.time)
 equalizeTimes <- function (dat,upper.time) {
   time <-1
   i <- 1
@@ -40,12 +42,14 @@ equalizeTimes <- function (dat,upper.time) {
 }
 
 
-#' Title
+#' prepEqualize
+#'
+#' this function helps to take data from the original dataframe, and break it into parts that can be equalized with the equalizeTimes function.
+#'
 #'
 #' @param dat
-#' @param fill_cols
 #'
-#' @return
+#' @return dataframe where none of the timsteps inbetween the min and the max are missing from either partner. Basically means the lengths of the partners data matches.
 #' @export
 #'
 #' @examples
@@ -69,31 +73,43 @@ prepEqualize <- function (dat) {
     return(rbind(firstPerson.df,secondPerson.df))
 }
 
-#' Title
+#' makeEqual
+#'
+#' this function takes a full dataframe, processes in groups by dyad, equalizes each of the partners data based on min and max times, and returns a new dataframe for the whole experiment population which is balanced.
 #'
 #' @param dat
-#' @param fill_cols
 #'
 #' @return
 #' @export
 #'
 #' @examples
-crossActorPartner <- function (dat) {
+#' makeEqual(my.unbalanced.data.frame)
+makeEqual <- function (dat) {
     dat %>%
         group_by(Dyad) %>%
         do(prepEqualize(.)) -> all.equalized.partners
     ## now we go on to combine the columns into a new df
     return(all.equalized.partners)
 }
-### this is the dataframe column selections
-#' Title
+#' crossPartners
+#' 
+#' This function does the much anticipated actual flipping of the data. Effectively turns a long datastructure in a wide where a specific person's id
+#' has their partner's data also within that row. Very helpful format for
+#' performing fitting and other types of analysis.
+#'
+#' In the example below the argument is equalized and estimated data, because
+#' that illustrates that this package uses this function following the 
+#' derivative estimation step.
+#'
+#'
 #'
 #' @param data
 #'
-#' @return
+#' @return a new dataframe taht has a wide format with a person and partenrs data on the same row
 #' @export
 #'
 #' @examples
+#' crossPartners(equalized.estimated.data)
 crossPartners <- function (data) {
   ##create copy flipped
   data %>%

@@ -2,13 +2,21 @@
 % Please edit documentation in R/dplyr_actor_partner_cross.R
 \name{equalizeTimes}
 \alias{equalizeTimes}
-\title{Title}
+\title{equalize times}
 \usage{
-equalizeTimes(dat, upperTimeBound, fill_cols)
+equalizeTimes(dat, upper.time)
 }
 \arguments{
-\item{fill_cols}{}
+\item{dat}{}
+}
+\value{
+a dataframe of correct length for the dyad
 }
 \description{
-Title
+this function makes missing values for observations at a particular time step
+ become NA. This makes it possible for equal length data in the ensuing steps of the coupled osc.
+ Additional important columns are filled in also.
+}
+\examples{
+equalizeTimes(personal.df,max.time)
 }
