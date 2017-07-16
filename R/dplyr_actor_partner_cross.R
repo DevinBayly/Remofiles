@@ -92,13 +92,13 @@ makeEqual <- function (dat) {
     return(all.equalized.partners)
 }
 #' crossPartners
-#' 
+#'
 #' This function does the much anticipated actual flipping of the data. Effectively turns a long datastructure in a wide where a specific person's id
 #' has their partner's data also within that row. Very helpful format for
 #' performing fitting and other types of analysis.
 #'
 #' In the example below the argument is equalized and estimated data, because
-#' that illustrates that this package uses this function following the 
+#' that illustrates that this package uses this function following the
 #' derivative estimation step.
 #'
 #'

@@ -1,0 +1,78 @@
+---
+title: "Coupled Oscillator R package -- dyadic experimental analysis"
+author: "Devin Bayly"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This document aims to give some more instruction about what happens at each step in the process of using the functions included with the cplosc package as it currently stands. In my opinion this package works in a fairly linear fashion, with potential detours for users to tweak their results before proceeding: rough procession is
+
+- "build"
+- "process"
+- "fit/model" 
+
+It's unlikely that your success will be quite as high if functions from  fitting are used on data that wasn't already involved with processing or building steps.
+
+```{r ,echo=FALSE}
+library(cplosc)
+print(getwd())
+```
+
+## Building Stage
+
+The absolute first thing involved with the cplosc package is to read your data into a global environment variable. Just remember the naming choices in this vignette are only chosen to be as explanatory as possible, feel free to choose your own variable names.
+
+```r
+base.data = read.csv("../physio2.csv")# this is the importing step for the data
+```
+
+From this data you can now build a dataframe that is well suited to the rest of the cplosc processing and analysis.
+
+```r
+built.data  <- build_data(base.data,"id","dyad","dial","age","sexm","time")
+```
+
+The first argument is the dataframe object from the previous step. Second is the name of the column holding your subject id's, or whatever is the equivalent in your dataset. Third argument is the column name for the dyad id values: data describing which dyad each person belongs to. The fourth argument is a time series measurement that will be modeled with this package: here we have subject scores on a dial measured over time. The fifth argument is the moderator which we are interested in from the raw csv. The sixth argument is a distinguisher that will be split into two separate binary columns `Dist1` and `Dist0` within this function. Lastly we have the name of the column with *continuous* time meausurements. 
+
+The other exciting thing is that `build_data` generates a plot of the dyad groups and the observable. The purpose here is for you to double check that everything looks alright before proceeding: please remove from the raw csv any cases where a partners data is missing, interrupted experiments (fewer than ~15 time points), or anything else that catches your eye. When you have performed any necessary raw csv modifications go ahead and rerun the build_data.
+
+```r
+built.data  <- build_data(base.data,"id","dyad","dial","age","sexm","time")
+```
+
+## Processing data
+
+Next up is the processing step. Again this is just point where you call a function which runs a number of other ones behind the scenes. `Process_data ` takes data in the generic built form, and a selection of tau and dim as vectors. These values are specific to the derivative estimation that occurs using Stephen Boker's GLLA (general local linear approximation) functions (TODO make reference). There is an optional final argument to have Rsquared results populated in the global environment to debug the estimates.
+
+```
+result.list <- process_data(built.data,c(1),c(5))
+#result.list <- process_data(built.data,c(1),c(5),T)# the T means extra info about derivative estimates
+```
+
+A list object is returned from process data because it is possible to have multiple estimates run. 
+
+```
+result.list <- process_data(built.data,c(1,2,3),c(5,6))
+```
+
+This would give us a list with 6 dataframe results with column names that help remind which operation they are the result of.
+
+## Fitting and Analysis
+
+The final step is to take one of the results from the processing and put in through one of the fitting functions. The block below demonstrates the use of the most simplistic model for the dyadic timeseries data.
+
+```
+fit <- base_co(check.data,tau,dm)
+```
+
+Notice that this function requires you to put in the tau and dim that goes with the data. (TODO make it take the tau and dim from the data provided)
+
+This returns an R fit object that can be passed to plotting tools or summary functions.
+
+## Final words
+
+That covers the basics! And please don't hesitate to contact me with questions or suggestions (alternate package names? haha) for the cplosc package. 
